@@ -1,45 +1,107 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  text-align: center;
   margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  min-height: 100vh;
+  color: #333;
 }
 
 h1 {
-  background: #4CAF50;
+  text-align: center;
   color: white;
-  padding: 20px;
+  margin: 0;
+  padding: 30px 20px;
+  font-size: 2.5em;
 }
 
 .container {
+  background: white;
+  max-width: 700px;
+  margin: auto;
+  margin-top: 30px;
   padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
 .categories {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
-  max-width: 500px;
-  margin: auto;
+  margin-top: 30px;
 }
 
 .category {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
+  display: block;
+  padding: 25px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+  font-size: 1.2em;
   text-decoration: none;
-  color: black;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
 }
 
 .category:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-button {
-  margin: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
+#question {
+  font-size: 1.4em;
+  margin-bottom: 20px;
+}
+
+#answers button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1em;
   cursor: pointer;
+  background: #f1f1f1;
+  transition: background 0.2s;
+}
+
+#answers button:hover {
+  background: #e0e0e0;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+#score {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.summary {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.summary-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.back-home {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #667eea;
+  font-weight: bold;
 }

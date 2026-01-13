@@ -29,17 +29,19 @@ const quizzes = {
 let currentQuiz = [];
 let index = 0;
 let score = 0;
+let userAnswers = [];
 
 function startQuiz(category) {
   currentQuiz = quizzes[category];
   index = 0;
   score = 0;
+  userAnswers = [];
   showQuestion();
 }
 
 function showQuestion() {
   const q = currentQuiz[index];
-  document.getElementById("question").innerText = q.q;
+  document.getElementById("question").innerText = `Domanda ${index + 1}: ${q.q}`;
 
   const answersDiv = document.getElementById("answers");
   answersDiv.innerHTML = "";
@@ -47,24 +49,55 @@ function showQuestion() {
   q.a.forEach((text, i) => {
     const btn = document.createElement("button");
     btn.innerText = text;
-    btn.onclick = () => answer(i);
+    btn.onclick = () => answer(i, btn);
     answersDiv.appendChild(btn);
   });
 }
 
-function answer(choice) {
-  if (choice === currentQuiz[index].correct) {
+function answer(choice, button) {
+  const q = currentQuiz[index];
+  const buttons = document.querySelectorAll("#answers button");
+
+  buttons.forEach(b => b.disabled = true);
+
+  if (choice === q.correct) {
+    button.classList.add("correct");
     score++;
-  }
-
-  index++;
-
-  if (index < currentQuiz.length) {
-    showQuestion();
   } else {
-    document.getElementById("question").innerText = "🎉 Quiz completato!";
-    document.getElementById("answers").innerHTML = "";
-    document.getElementById("score").innerText =
-      "Punteggio: " + score + " / " + currentQuiz.length;
+    button.classList.add("wrong");
+    buttons[q.correct].classList.add("correct");
   }
+
+  userAnswers.push({
+    question: q.q,
+    selected: q.a[choice],
+    correct: q.a[q.correct]
+  });
+
+  setTimeout(() => {
+    index++;
+    if (index < currentQuiz.length) {
+      showQuestion();
+    } else {
+      showSummary();
+    }
+  }, 800);
+}
+
+function showSummary() {
+  const container = document.querySelector(".container");
+  container.innerHTML = `
+    <h2>📊 Risultato finale</h2>
+    <p>Hai totalizzato <strong>${score} / ${currentQuiz.length}</strong></p>
+    <div class="summary">
+      ${userAnswers.map((item, i) => `
+        <div class="summary-item">
+          <strong>Domanda ${i + 1}:</strong> ${item.question}<br>
+          ✅ Corretta: ${item.correct}<br>
+          🧍‍♂️ Tua risposta: ${item.selected}
+        </div>
+      `).join("")}
+    </div>
+    <a class="back-home" href="index.html">⬅ Torna alla Home</a>
+  `;
 }
