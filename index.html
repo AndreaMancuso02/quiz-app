@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz App</title>
+</head>
+<body>
+
+<h1>Quiz</h1>
+
+<select id="category">
+  <option value="storia">Storia</option>
+  <option value="scienza">Scienza</option>
+</select>
+
+<button onclick="startQuiz()">Inizia</button>
+
+<p id="question"></p>
+<div id="answers"></div>
+<p id="score"></p>
+
+<script>
+const quizzes = {
+  storia: [
+    { q: "Chi ha scoperto l'America?", a: ["Colombo", "Galileo", "Dante"], correct: 0 }
+  ],
+  scienza: [
+    { q: "Che pianeta è il terzo dal sole?", a: ["Marte", "Terra", "Venere"], correct: 1 }
+  ]
+};
+
+let index = 0;
+let score = 0;
+let currentQuiz = [];
+
+function startQuiz() {
+  const cat = document.getElementById("category").value;
+  currentQuiz = quizzes[cat];
+  index = 0;
+  score = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = currentQuiz[index];
+  document.getElementById("question").innerText = q.q;
+
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+
+  q.a.forEach((text, i) => {
+    const btn = document.createElement("button");
+    btn.innerText = text;
+    btn.onclick = () => answer(i);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function answer(choice) {
+  if (choice === currentQuiz[index].correct) score++;
+  index++;
+
+  if (index < currentQuiz.length) {
+    showQuestion();
+  } else {
+    document.getElementById("score").innerText =
+      "Punteggio: " + score + "/" + currentQuiz.length;
+  }
+}
+</script>
+
+</body>
+</html>
