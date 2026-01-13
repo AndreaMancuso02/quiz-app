@@ -11,12 +11,17 @@
 <h1 id="category-title">Caricamento...</h1>
 
 <div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <span id="timer-display">⏳ 15s</span>
+    <span id="question-number" style="font-weight: bold; color: #764ba2;"></span>
+  </div>
+  
   <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+  
   <p id="question"></p>
   <div id="answers"></div>
-  <p id="score"></p>
 
-  <a class="back-home" href="index.html">⬅ Torna alla Home</a>
+  <a class="back-home" href="index.html">⬅ Abbandona Quiz</a>
 </div>
 
 <script src="quiz.js"></script>

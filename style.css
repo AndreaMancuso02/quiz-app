@@ -11,42 +11,30 @@ body {
   padding: 10px;
 }
 
-h1 {
-  color: white;
-  text-align: center;
-  font-size: 1.8rem;
-  margin: 20px 0;
-}
+h1 { color: white; text-align: center; font-size: 1.8rem; margin: 20px 0; }
 
 .container {
   background: white;
   width: 100%;
-  max-width: 500px; /* Più stretto per focus mobile */
+  max-width: 500px;
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Griglia categorie responsive */
-.categories {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.category {
-  display: block;
-  padding: 20px;
-  border-radius: 12px;
-  background: #4facfe;
-  color: white;
-  text-decoration: none;
+/* Stile Timer */
+#timer-display {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.1rem;
   font-weight: bold;
-  text-align: center;
-  transition: transform 0.2s;
+  color: #764ba2;
+  background: #f0f0f0;
+  padding: 5px 12px;
+  border-radius: 15px;
+  border: 1px solid #ddd;
 }
 
-/* Pulsanti risposte grandi per dita (Mobile Friendly) */
+/* Pulsanti risposte */
 #answers button {
   width: 100%;
   margin: 8px 0;
@@ -56,53 +44,35 @@ h1 {
   background: #f8f9fa;
   font-size: 1rem;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent; /* Rimuove flash blu su mobile */
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Barra di progresso */
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: #eee;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-.progress-fill {
-  height: 100%;
-  background: #4facfe;
-  width: 0%;
-  transition: width 0.4s ease;
+.progress-bar { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+.progress-fill { height: 100%; background: #4facfe; width: 0%; transition: width 0.4s ease; }
+
+/* Animazioni e Feedback */
+.correct { background: #4CAF50 !important; color: white; border-color: #4CAF50 !important; transform: scale(1.02); }
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }
 
-/* Colori feedback */
-.correct { background: #4CAF50 !important; color: white; border-color: #4CAF50 !important; }
-.wrong { background: #f44336 !important; color: white; border-color: #f44336 !important; }
+.wrong { 
+  background: #f44336 !important; 
+  color: white; 
+  border-color: #f44336 !important; 
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Riepilogo finale */
+.summary-item { padding: 12px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+.final-score { font-size: 2.5rem; font-weight: bold; text-align: center; color: #764ba2; margin: 10px 0; }
 .text-correct { color: #2e7d32; font-weight: bold; }
 .text-wrong { color: #c62828; font-weight: bold; }
-
-/* Adattamenti per schermi piccoli */
-@media (max-width: 480px) {
-  h1 { font-size: 1.5rem; }
-  .container { padding: 15px; }
-  #question { font-size: 1.1rem; }
-  #answers button { padding: 14px; font-size: 0.95rem; }
-}
-
-.summary-item {
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 0.9rem;
-}
-.final-score {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  color: #764ba2;
-}
-.back-home {
-  display: block;
-  text-align: center;
-  margin-top: 15px;
-  color: #667eea;
-  text-decoration: none;
-}
+.back-home { display: block; text-align: center; margin-top: 15px; color: #667eea; text-decoration: none; font-weight: bold; }
