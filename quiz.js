@@ -25,24 +25,8 @@ const quizzes = {
   ]
 };
 
-let currentQuiz = [];
-let index = 0;
-let score = 0;
-let userAnswers = [];
-
-window.onload = () => {
-  const params = new URLSearchParams(window.location.search);
-  const cat = params.get('cat');
-  if (cat && quizzes[cat]) {
-    document.getElementById("category-title").innerText = cat.charAt(0).toUpperCase() + cat.slice(1);
-    startQuiz(cat);
-  } else if (window.location.pathname.includes("quiz.html")) {
-    window.location.href = "index.html";
-  }
-};
-
 function startQuiz(category) {
-  // 1. Mischia le domande
+  // Clona e mischia l'ordine delle domande
   currentQuiz = [...quizzes[category]].sort(() => Math.random() - 0.5);
   index = 0;
   score = 0;
@@ -54,15 +38,18 @@ function showQuestion() {
   const q = currentQuiz[index];
   document.getElementById("question").innerText = `Domanda ${index + 1}: ${q.q}`;
   
+  // Aggiorna barra progresso
   const progress = (index / currentQuiz.length) * 100;
   document.getElementById("progress").style.width = `${progress}%`;
 
   const answersDiv = document.getElementById("answers");
   answersDiv.innerHTML = "";
 
-  // 2. Crea un array di oggetti per mischiare le risposte mantenendo il riferimento alla correttezza
-  const shuffledAnswers = q.a.map((text, i) => ({ text, isCorrect: i === q.correct }))
-                           .sort(() => Math.random() - 0.5);
+  // Mischia le risposte mantenendo il riferimento alla corretta
+  const shuffledAnswers = q.a.map((text, i) => ({ 
+    text, 
+    isCorrect: i === q.correct 
+  })).sort(() => Math.random() - 0.5);
 
   shuffledAnswers.forEach((ans) => {
     const btn = document.createElement("button");
@@ -74,14 +61,14 @@ function showQuestion() {
 
 function handleAnswer(selectedObj, button, allOptions) {
   const buttons = document.querySelectorAll("#answers button");
-  buttons.forEach(b => b.disabled = true);
+  buttons.forEach(b => b.disabled = true); // Disabilita per evitare click multipli
 
   if (selectedObj.isCorrect) {
     button.classList.add("correct");
     score++;
   } else {
     button.classList.add("wrong");
-    // Trova e colora quella corretta
+    // Mostra la risposta giusta se l'utente sbaglia
     buttons.forEach((b, i) => {
       if (allOptions[i].isCorrect) b.classList.add("correct");
     });
@@ -100,8 +87,8 @@ function handleAnswer(selectedObj, button, allOptions) {
   }, 1000);
 }
 
+// Funzione showSummary con pulsante Riprova che resetta la pagina
 function showSummary() {
-  document.getElementById("progress").style.width = `100%`;
   const container = document.querySelector(".container");
   container.innerHTML = `
     <h2>📊 Risultato finale</h2>
@@ -110,15 +97,15 @@ function showSummary() {
       ${userAnswers.map((item, i) => `
         <div class="summary-item">
           <strong>${i + 1}. ${item.question}</strong><br>
-          <small>Risposta corretta: ${item.correct}</small><br>
           <span class="${item.isRight ? 'text-correct' : 'text-wrong'}">
-            Tua risposta: ${item.selected}
+            Tua: ${item.selected} ${item.isRight ? '✅' : '❌'}
           </span>
+          ${!item.isRight ? `<br><small>Corretta: ${item.correct}</small>` : ''}
         </div>
       `).join("")}
     </div>
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-        <button onclick="location.reload()" class="category" style="border:none; cursor:pointer; width:100%">🔄 Riprova</button>
+    <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+        <button onclick="location.reload()" class="category" style="border:none; cursor:pointer;">🔄 Gioca ancora</button>
         <a class="back-home" href="index.html">⬅ Torna alla Home</a>
     </div>
   `;
