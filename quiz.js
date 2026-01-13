@@ -11,7 +11,6 @@ const quizzes = {
     { q: "Chi era Napoleone?", a: ["Generale", "Pittore", "Filosofo"], correct: 0 },
     { q: "La Prima Guerra Mondiale iniziò nel?", a: ["1914", "1939", "1945"], correct: 0 }
   ],
-
   geografia: [
     { q: "Qual è la capitale d'Italia?", a: ["Roma", "Milano", "Torino"], correct: 0 },
     { q: "Qual è il fiume più lungo del mondo?", a: ["Nilo", "Po", "Danubio"], correct: 0 },
@@ -31,8 +30,22 @@ let index = 0;
 let score = 0;
 let userAnswers = [];
 
+// Funzione che legge l'URL all'apertura
+window.onload = () => {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  
+  if (cat && quizzes[cat]) {
+    document.getElementById("category-title").innerText = cat.charAt(0).toUpperCase() + cat.slice(1);
+    startQuiz(cat);
+  } else {
+    window.location.href = "index.html";
+  }
+};
+
 function startQuiz(category) {
-  currentQuiz = quizzes[category];
+  // Bonus: Mischia le domande ogni volta [Miglioramento suggerito]
+  currentQuiz = [...quizzes[category]].sort(() => Math.random() - 0.5);
   index = 0;
   score = 0;
   userAnswers = [];
@@ -42,6 +55,10 @@ function startQuiz(category) {
 function showQuestion() {
   const q = currentQuiz[index];
   document.getElementById("question").innerText = `Domanda ${index + 1}: ${q.q}`;
+  
+  // Aggiorna barra di progresso
+  const progress = (index / currentQuiz.length) * 100;
+  document.getElementById("progress").style.width = `${progress}%`;
 
   const answersDiv = document.getElementById("answers");
   answersDiv.innerHTML = "";
@@ -57,7 +74,6 @@ function showQuestion() {
 function answer(choice, button) {
   const q = currentQuiz[index];
   const buttons = document.querySelectorAll("#answers button");
-
   buttons.forEach(b => b.disabled = true);
 
   if (choice === q.correct) {
@@ -85,6 +101,7 @@ function answer(choice, button) {
 }
 
 function showSummary() {
+  document.getElementById("progress").style.width = `100%`;
   const container = document.querySelector(".container");
   container.innerHTML = `
     <h2>📊 Risultato finale</h2>
@@ -94,7 +111,9 @@ function showSummary() {
         <div class="summary-item">
           <strong>Domanda ${i + 1}:</strong> ${item.question}<br>
           ✅ Corretta: ${item.correct}<br>
-          🧍‍♂️ Tua risposta: ${item.selected}
+          <span style="color: ${item.selected === item.correct ? 'green' : 'red'}">
+            🧍‍♂️ Tua risposta: ${item.selected}
+          </span>
         </div>
       `).join("")}
     </div>
