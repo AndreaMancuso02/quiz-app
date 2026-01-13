@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In gioco - Super Quiz</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <div class="top-controls">
+            <button class="theme-btn" onclick="toggleDarkMode()">🌓 Tema</button>
+        </div>
 
-<h1 id="category-title">Caricamento...</h1>
+        <div id="quiz-screen">
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
 
-<div class="container">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <span id="timer-display">⏳ 15s</span>
-    <span id="question-number" style="font-weight: bold; color: #764ba2;"></span>
-  </div>
-  
-  <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
-  
-  <p id="question"></p>
-  <div id="answers"></div>
+            <div class="quiz-info">
+                <span id="status-text">Caricamento...</span>
+                <span id="timer-display">⏱ 15s</span>
+            </div>
+            
+            <div id="question-box" class="fade-in">
+                <h2 id="question-text">Attendere...</h2>
+                <div id="answer-options"></div>
+            </div>
+        </div>
 
-  <a class="back-home" href="index.html">⬅ Abbandona Quiz</a>
-</div>
-
-<script src="quiz.js"></script>
+        <div id="result-screen" class="hidden">
+            <h1>Fine Quiz!</h1>
+            <div id="result-desc"></div>
+            <button class="btn-home" onclick="window.location.href='index.html'">Torna alla Home</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
