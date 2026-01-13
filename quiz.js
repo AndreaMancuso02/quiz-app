@@ -30,21 +30,19 @@ let index = 0;
 let score = 0;
 let userAnswers = [];
 
-// Funzione che legge l'URL all'apertura
 window.onload = () => {
   const params = new URLSearchParams(window.location.search);
   const cat = params.get('cat');
-  
   if (cat && quizzes[cat]) {
     document.getElementById("category-title").innerText = cat.charAt(0).toUpperCase() + cat.slice(1);
     startQuiz(cat);
-  } else {
+  } else if (window.location.pathname.includes("quiz.html")) {
     window.location.href = "index.html";
   }
 };
 
 function startQuiz(category) {
-  // Bonus: Mischia le domande ogni volta [Miglioramento suggerito]
+  // 1. Mischia le domande
   currentQuiz = [...quizzes[category]].sort(() => Math.random() - 0.5);
   index = 0;
   score = 0;
@@ -56,48 +54,50 @@ function showQuestion() {
   const q = currentQuiz[index];
   document.getElementById("question").innerText = `Domanda ${index + 1}: ${q.q}`;
   
-  // Aggiorna barra di progresso
   const progress = (index / currentQuiz.length) * 100;
   document.getElementById("progress").style.width = `${progress}%`;
 
   const answersDiv = document.getElementById("answers");
   answersDiv.innerHTML = "";
 
-  q.a.forEach((text, i) => {
+  // 2. Crea un array di oggetti per mischiare le risposte mantenendo il riferimento alla correttezza
+  const shuffledAnswers = q.a.map((text, i) => ({ text, isCorrect: i === q.correct }))
+                           .sort(() => Math.random() - 0.5);
+
+  shuffledAnswers.forEach((ans) => {
     const btn = document.createElement("button");
-    btn.innerText = text;
-    btn.onclick = () => answer(i, btn);
+    btn.innerText = ans.text;
+    btn.onclick = () => handleAnswer(ans, btn, shuffledAnswers);
     answersDiv.appendChild(btn);
   });
 }
 
-function answer(choice, button) {
-  const q = currentQuiz[index];
+function handleAnswer(selectedObj, button, allOptions) {
   const buttons = document.querySelectorAll("#answers button");
   buttons.forEach(b => b.disabled = true);
 
-  if (choice === q.correct) {
+  if (selectedObj.isCorrect) {
     button.classList.add("correct");
     score++;
   } else {
     button.classList.add("wrong");
-    buttons[q.correct].classList.add("correct");
+    // Trova e colora quella corretta
+    buttons.forEach((b, i) => {
+      if (allOptions[i].isCorrect) b.classList.add("correct");
+    });
   }
 
   userAnswers.push({
-    question: q.q,
-    selected: q.a[choice],
-    correct: q.a[q.correct]
+    question: currentQuiz[index].q,
+    selected: selectedObj.text,
+    correct: allOptions.find(a => a.isCorrect).text,
+    isRight: selectedObj.isCorrect
   });
 
   setTimeout(() => {
     index++;
-    if (index < currentQuiz.length) {
-      showQuestion();
-    } else {
-      showSummary();
-    }
-  }, 800);
+    index < currentQuiz.length ? showQuestion() : showSummary();
+  }, 1000);
 }
 
 function showSummary() {
@@ -105,18 +105,21 @@ function showSummary() {
   const container = document.querySelector(".container");
   container.innerHTML = `
     <h2>📊 Risultato finale</h2>
-    <p>Hai totalizzato <strong>${score} / ${currentQuiz.length}</strong></p>
+    <p class="final-score">${score} / ${currentQuiz.length}</p>
     <div class="summary">
       ${userAnswers.map((item, i) => `
         <div class="summary-item">
-          <strong>Domanda ${i + 1}:</strong> ${item.question}<br>
-          ✅ Corretta: ${item.correct}<br>
-          <span style="color: ${item.selected === item.correct ? 'green' : 'red'}">
-            🧍‍♂️ Tua risposta: ${item.selected}
+          <strong>${i + 1}. ${item.question}</strong><br>
+          <small>Risposta corretta: ${item.correct}</small><br>
+          <span class="${item.isRight ? 'text-correct' : 'text-wrong'}">
+            Tua risposta: ${item.selected}
           </span>
         </div>
       `).join("")}
     </div>
-    <a class="back-home" href="index.html">⬅ Torna alla Home</a>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button onclick="location.reload()" class="category" style="border:none; cursor:pointer; width:100%">🔄 Riprova</button>
+        <a class="back-home" href="index.html">⬅ Torna alla Home</a>
+    </div>
   `;
 }
